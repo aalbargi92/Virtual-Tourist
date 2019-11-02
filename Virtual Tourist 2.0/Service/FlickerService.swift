@@ -11,8 +11,8 @@ import Foundation
 class FlickerService {
     
     enum Endpoints {
-        static let apiKey = "Add Your API Key"
-        static let secret = "Add Your secret"
+        static let apiKey = "b19a6f84e635eb5ae3be554fa60b1868"
+        static let secret = "9ac01f8a5051dcf2"
         static let base = "https://www.flickr.com/services/rest/";
         
         case fetch(Int, Double, Double)
