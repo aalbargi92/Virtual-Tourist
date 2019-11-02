@@ -23,16 +23,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         dataController.load()
         
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        do {
-            let pins = try dataController.viewContext.fetch(fetchRequest)
-            for pin in pins {
-                dataController.viewContext.delete(pin)
-            }
-        } catch {
-            print("Error")
-        }
-        
         let navigationController = window?.rootViewController as! UINavigationController
         let travelMapController = navigationController.topViewController as! TravelMapViewController
         travelMapController.dataController = dataController
