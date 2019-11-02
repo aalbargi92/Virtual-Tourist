@@ -29,6 +29,7 @@ class PhotoAlbumViewController: UIViewController {
     var photos: [Photo] = []
     let insets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     var isDeleteAll = false
+    var isDelete = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,8 @@ class PhotoAlbumViewController: UIViewController {
         noImagesLabel.textAlignment = .center
         noImagesLabel.text = "No Images"
         setLoading(true)
+        
+        setupBar()
         
         setupFetchedResultsController()
         
@@ -55,10 +58,43 @@ class PhotoAlbumViewController: UIViewController {
         setupFetchedResultsController()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if isDelete {
+            deletePressed(deleteButton)
+        }
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         fetchedResultsController = nil
+    }
+    
+    func setupBar() {
+        deleteButton = UIBarButtonItem(title: "Delete", style: .plain, target: self, action: #selector(deletePressed(_:)))
+        deleteButton.possibleTitles = ["Delete", "Done"]
+        navigationItem.rightBarButtonItem = deleteButton
+    }
+    
+    @objc func deletePressed(_ sender: UIBarButtonItem) {
+        isDelete = !isDelete
+        navigationController?.navigationBar.barTintColor = isDelete ? .red : .white
+        deleteButton.title = isDelete ? "Done" : "Delete"
+        updateDeleteButton()
+    }
+    
+    func updateDeleteButton(_ loading: Bool = false) {
+        guard fetchedResultsController != nil else {
+            return
+        }
+        
+        if loading {
+            deleteButton.isEnabled = !loading
+        } else if let pins = fetchedResultsController.fetchedObjects {
+            deleteButton.isEnabled = isDelete ? isDelete : pins.count > 0
+        }
     }
     
     fileprivate func setupFetchedResultsController() {
@@ -85,7 +121,7 @@ class PhotoAlbumViewController: UIViewController {
     
     func handlePhotosResponse(photos: [Photo], error: Error?) {
         guard error == nil else {
-            print("Could not load photos: \(error?.localizedDescription ?? "")")
+            self.showAlert(title: "Error", message: error!.localizedDescription )
             return
         }
         
@@ -127,6 +163,7 @@ class PhotoAlbumViewController: UIViewController {
     func setLoading(_ loading: Bool) {
         fetchButton.isEnabled = !loading
         showLoading(loading)
+        updateDeleteButton(loading)
     }
     
     func showNoImages(_ show: Bool) {
@@ -145,6 +182,20 @@ class PhotoAlbumViewController: UIViewController {
             activity.startAnimating()
         } else {
             photosCollectionView.backgroundView = nil
+        }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "Ok", style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? ImageViewController {
+            destination.url = (sender as! URL)
         }
     }
 }
@@ -204,8 +255,12 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
 // MARK: - Collection View Delegate
 extension PhotoAlbumViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photoToDelete = fetchedResultsController.object(at: indexPath)
-        deletePhoto(photoToDelete)
+        if isDelete {
+            let photoToDelete = fetchedResultsController.object(at: indexPath)
+            deletePhoto(photoToDelete)
+        } else {
+            performSegue(withIdentifier: "showImage", sender: fetchedResultsController.object(at: indexPath).url)
+        }
     }
 }
 
@@ -243,6 +298,7 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
         switch type {
         case .insert:
             photosCollectionView.insertItems(at: [newIndexPath!])
+            updateDeleteButton()
         case .delete:
             photosCollectionView.reloadData()
             if photosCollectionView.numberOfItems(inSection: indexPath!.section) == 0 {

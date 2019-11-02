@@ -61,7 +61,6 @@ class FlickerService {
     }
     
     class func fetchImages(page: Int, latitude: Double, longitude: Double, completion: @escaping ([Photo], Error?) -> Void) {
-        print(Endpoints.fetch(page, latitude, longitude).url.absoluteString)
         taskForGetRequest(url: Endpoints.fetch(page, latitude, longitude).url, responseType: PhotosResponse.self) { (response, error) in
             if let response = response {
                 completion(response.photos.photo, nil)

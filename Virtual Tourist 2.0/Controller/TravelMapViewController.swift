@@ -117,6 +117,28 @@ class TravelMapViewController: UIViewController {
         try? dataController.viewContext.save()
     }
     
+    func getPhotos(pin: Pin) {
+        let page = Int(arc4random())
+        FlickerService.fetchImages(page: page, latitude: pin.latitude, longitude: pin.longitude) { (photos, error) in
+            guard error == nil else {
+                self.showAlert(title: "Error", message: error!.localizedDescription )
+                return
+            }
+            
+            photos.forEach {
+                self.addPhoto(pin: pin, url: $0.url)
+            }
+        }
+    }
+    
+    func addPhoto(pin: Pin, url: URL?) {
+        let image = Image(context: dataController.viewContext)
+        image.pin = pin
+        image.url = url
+        image.creationDate = Date()
+        try? dataController.viewContext.save()
+    }
+    
     private func deletePin(_ pin: Pin) {
         dataController.viewContext.delete(pin)
         try? dataController.viewContext.save()
@@ -131,6 +153,14 @@ class TravelMapViewController: UIViewController {
         if let pins = fetchedResultsController.fetchedObjects {
             deleteButton.isEnabled = isDelete ? isDelete : pins.count > 0
         }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(.init(title: "Ok", style: .default, handler: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
 }
@@ -159,12 +189,23 @@ extension TravelMapViewController: MKMapViewDelegate {
         var viewToReturn = mapView.dequeueReusableAnnotationView(withIdentifier: pinId)
         if viewToReturn == nil {
             viewToReturn = MKPinAnnotationView(annotation: annotation, reuseIdentifier: pinId)
-            viewToReturn?.canShowCallout = false
+            viewToReturn?.isDraggable = true
         } else {
             viewToReturn!.annotation = annotation
         }
         
         return viewToReturn
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
+        switch newState {
+        case .starting:
+            view.dragState = .dragging
+        case .ending:
+            view.dragState = .ending
+        default:
+            break
+        }
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -189,6 +230,7 @@ extension TravelMapViewController: NSFetchedResultsControllerDelegate {
             let pin = fetchedResultsController.object(at: newIndexPath!)
             mapView.addAnnotation(pin)
             updateDeleteButton()
+            getPhotos(pin: pin)
         case .delete:
             updateDeleteButton()
         default:

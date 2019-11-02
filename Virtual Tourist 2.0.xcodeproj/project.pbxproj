@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,6 +27,7 @@
 		B8EC201E236C652F00070F73 /* Pin+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8EC201D236C652F00070F73 /* Pin+Extension.swift */; };
 		B8EC2020236C6A5400070F73 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8EC201F236C6A5400070F73 /* PhotoAlbumViewController.swift */; };
 		B8EC2022236C6B9400070F73 /* ImageCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8EC2021236C6B9400070F73 /* ImageCollectionCell.swift */; };
+		B8F747B3236DFE6000524DA7 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F747B2236DFE6000524DA7 /* ImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		B8EC201D236C652F00070F73 /* Pin+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Pin+Extension.swift"; sourceTree = "<group>"; };
 		B8EC201F236C6A5400070F73 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		B8EC2021236C6B9400070F73 /* ImageCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionCell.swift; sourceTree = "<group>"; };
+		B8F747B2236DFE6000524DA7 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F2E97553F72956BBE5A5C0B9 /* Pods-Virtual Tourist 2.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist 2.0.debug.xcconfig"; path = "Target Support Files/Pods-Virtual Tourist 2.0/Pods-Virtual Tourist 2.0.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,7 +84,6 @@
 				F2E97553F72956BBE5A5C0B9 /* Pods-Virtual Tourist 2.0.debug.xcconfig */,
 				626AAB6840C38EC6DF35F075 /* Pods-Virtual Tourist 2.0.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -146,6 +147,7 @@
 			children = (
 				B8EC2002236C546100070F73 /* TravelMapViewController.swift */,
 				B8EC201F236C6A5400070F73 /* PhotoAlbumViewController.swift */,
+				B8F747B2236DFE6000524DA7 /* ImageViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -321,6 +323,7 @@
 				B8EC2008236C61A700070F73 /* MapService.swift in Sources */,
 				B8EC2014236C61EE00070F73 /* FlickerResponse.swift in Sources */,
 				B8EC2007236C61A700070F73 /* FlickerService.swift in Sources */,
+				B8F747B3236DFE6000524DA7 /* ImageViewController.swift in Sources */,
 				B8EC2022236C6B9400070F73 /* ImageCollectionCell.swift in Sources */,
 				B8EC201E236C652F00070F73 /* Pin+Extension.swift in Sources */,
 				B8EC2010236C61EE00070F73 /* ImageResponse.swift in Sources */,
