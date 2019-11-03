@@ -80,7 +80,7 @@ class PhotoAlbumViewController: UIViewController {
     
     @objc func deletePressed(_ sender: UIBarButtonItem) {
         isDelete = !isDelete
-        navigationController?.navigationBar.barTintColor = isDelete ? .red : .white
+        navigationController?.navigationBar.barTintColor = isDelete ? .red : .systemBackground
         deleteButton.title = isDelete ? "Done" : "Delete"
         updateDeleteButton()
     }

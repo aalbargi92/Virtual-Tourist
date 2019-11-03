@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6270B2DBCAC649060CB29568 /* Pods_Virtual_Tourist_2_0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B037834EFD270C6AB166D5 /* Pods_Virtual_Tourist_2_0.framework */; };
+		B8A67EFB236EA9EB0098924E /* LocationSearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A67EFA236EA9EB0098924E /* LocationSearchTableViewController.swift */; };
+		B8A67EFD236EDE210098924E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A67EFC236EDE200098924E /* UIViewController+Extensions.swift */; };
 		B8EC1FEA236C51DF00070F73 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8EC1FE9236C51DF00070F73 /* AppDelegate.swift */; };
 		B8EC1FEC236C51DF00070F73 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8EC1FEB236C51DF00070F73 /* SceneDelegate.swift */; };
 		B8EC1FF1236C51DF00070F73 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B8EC1FEF236C51DF00070F73 /* Main.storyboard */; };
@@ -33,6 +35,8 @@
 /* Begin PBXFileReference section */
 		42B037834EFD270C6AB166D5 /* Pods_Virtual_Tourist_2_0.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Virtual_Tourist_2_0.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		626AAB6840C38EC6DF35F075 /* Pods-Virtual Tourist 2.0.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Virtual Tourist 2.0.release.xcconfig"; path = "Target Support Files/Pods-Virtual Tourist 2.0/Pods-Virtual Tourist 2.0.release.xcconfig"; sourceTree = "<group>"; };
+		B8A67EFA236EA9EB0098924E /* LocationSearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchTableViewController.swift; sourceTree = "<group>"; };
+		B8A67EFC236EDE200098924E /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		B8EC1FE6236C51DF00070F73 /* Virtual Tourist 2.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist 2.0.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8EC1FE9236C51DF00070F73 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B8EC1FEB236C51DF00070F73 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +152,7 @@
 				B8EC2002236C546100070F73 /* TravelMapViewController.swift */,
 				B8EC201F236C6A5400070F73 /* PhotoAlbumViewController.swift */,
 				B8F747B2236DFE6000524DA7 /* ImageViewController.swift */,
+				B8A67EFA236EA9EB0098924E /* LocationSearchTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				B8EC201D236C652F00070F73 /* Pin+Extension.swift */,
+				B8A67EFC236EDE200098924E /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -324,7 +330,9 @@
 				B8EC2014236C61EE00070F73 /* FlickerResponse.swift in Sources */,
 				B8EC2007236C61A700070F73 /* FlickerService.swift in Sources */,
 				B8F747B3236DFE6000524DA7 /* ImageViewController.swift in Sources */,
+				B8A67EFB236EA9EB0098924E /* LocationSearchTableViewController.swift in Sources */,
 				B8EC2022236C6B9400070F73 /* ImageCollectionCell.swift in Sources */,
+				B8A67EFD236EDE210098924E /* UIViewController+Extensions.swift in Sources */,
 				B8EC201E236C652F00070F73 /* Pin+Extension.swift in Sources */,
 				B8EC2010236C61EE00070F73 /* ImageResponse.swift in Sources */,
 				B8EC2013236C61EE00070F73 /* PhotosResponse.swift in Sources */,

@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 import MapKit
+import CoreLocation
+import SwiftEntryKit
+
+protocol HandleMapSearch {
+    func dropPinZoomIn(placemark:MKPlacemark)
+}
 
 class TravelMapViewController: UIViewController {
     
@@ -19,15 +25,23 @@ class TravelMapViewController: UIViewController {
     var deleteButton: UIBarButtonItem!
     
     // MARK: - Vars
+    var resultSearchController:UISearchController!
+    let locationManager = CLLocationManager()
     var dataController: DataController!
     var fetchedResultsController: NSFetchedResultsController<Pin>!
     var pins: [Pin] = []
     var isDelete = false
+    var selectedPin:MKPlacemark? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        
         setupLastLocation()
+        setupSearchBar()
         setupBar()
         
         setupFetchedResultsController()
@@ -76,7 +90,22 @@ class TravelMapViewController: UIViewController {
     func setupLastLocation() {
         if let center = MapSerivce.getCenter() {
             mapView.setRegion(.init(center: .init(center.center), span: .init(center.zoom)), animated: false)
+        } else {
+            locationManager.requestLocation()
         }
+    }
+    
+    func setupSearchBar() {
+        let locationSearchTable = storyboard!.instantiateViewController(withIdentifier: "LocationSearchTable") as! LocationSearchTableViewController
+        resultSearchController = UISearchController(searchResultsController: locationSearchTable)
+        resultSearchController.delegate = self
+        resultSearchController.searchResultsUpdater = locationSearchTable
+        resultSearchController.obscuresBackgroundDuringPresentation = false
+        resultSearchController.searchBar.placeholder = "Type a location here to search"
+        navigationItem.searchController = resultSearchController
+        definesPresentationContext = true
+        locationSearchTable.mapView = mapView
+        locationSearchTable.handleMapSearchDelegate = self
     }
     
     func setupBar() {
@@ -94,7 +123,7 @@ class TravelMapViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func mapLongPressed(_ sender: UILongPressGestureRecognizer) {
-        guard sender.state == .ended else { return }
+        guard sender.state == .ended, !isDelete else { return }
         
         let point = sender.location(in: mapView)
         let coordinates = mapView.convert(point, toCoordinateFrom: mapView)
@@ -104,7 +133,8 @@ class TravelMapViewController: UIViewController {
     
     @objc func deletePressed(_ sender: UIBarButtonItem) {
         isDelete = !isDelete
-        navigationController?.navigationBar.barTintColor = isDelete ? .red : .white
+        navigationController?.navigationBar.barTintColor = isDelete ? .red : .systemBackground
+        navigationController?.navigationBar.backgroundColor = isDelete ? .red : .systemBackground
         deleteButton.title = isDelete ? "Done" : "Delete"
         updateDeleteButton()
     }
@@ -169,20 +199,25 @@ class TravelMapViewController: UIViewController {
 extension TravelMapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        guard let pin = view.annotation as? Pin else {
-            return
-        }
-        if isDelete {
-            
-            deletePin(pin)
-            print("Deleted")
+        if let pin = view.annotation as? Pin {
+            if isDelete {
+                deletePin(pin)
+                print("Deleted")
+            } else {
+                performSegue(withIdentifier: "showImages", sender: pin)
+                print("Selected")
+            }
         } else {
-            performSegue(withIdentifier: "showImages", sender: pin)
-            print("Selected")
+            print("new")
+            addPin(coordinates: view.annotation!.coordinate)
         }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        guard annotation is Pin else {
+            return nil
+        }
         
         let pinId = "pinId"
         
@@ -231,11 +266,76 @@ extension TravelMapViewController: NSFetchedResultsControllerDelegate {
             mapView.addAnnotation(pin)
             updateDeleteButton()
             getPhotos(pin: pin)
+            if let selectedPin = selectedPin {
+                if selectedPin.coordinate.latitude == pin.coordinate.latitude, selectedPin.coordinate.latitude == pin.coordinate.longitude {
+                    mapView.removeAnnotation(selectedPin)
+                }
+            }
+            var attributes = EKAttributes()
+            attributes.position = .top
+            SwiftEntryKit.display(entry: getNotificationView(text: "Saved Successfully", type: .add), using: attributes)
         case .delete:
             updateDeleteButton()
+            var attributes = EKAttributes()
+            attributes.position = .top
+            SwiftEntryKit.display(entry: getNotificationView(text: "Deleted Successfully", type: .delete), using: attributes)
         default:
             break
         }
     }
     
+}
+
+extension TravelMapViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+    }
+}
+
+extension TravelMapViewController: UISearchControllerDelegate {
+    func willPresentSearchController(_ searchController: UISearchController) {
+        if isDelete {
+            deletePressed(deleteButton)
+        }
+        
+    }
+}
+
+extension TravelMapViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            locationManager.requestLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        if let location = locations.first {
+            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05) //MKCoordinateSpanMake(0.05, 0.05)
+            let region = MKCoordinateRegion(center: location.coordinate, span: span)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Error: \(error.localizedDescription)")
+    }
+}
+
+extension TravelMapViewController: HandleMapSearch {
+    func dropPinZoomIn(placemark:MKPlacemark){
+        selectedPin = placemark
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = placemark.coordinate
+        annotation.title = placemark.name
+        if let city = placemark.locality,
+            let state = placemark.administrativeArea {
+                annotation.subtitle = "\(city) \(state)"
+        }
+        mapView.addAnnotation(annotation)
+        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        let region = MKCoordinateRegion(center: placemark.coordinate, span: span)
+        mapView.setRegion(region, animated: true)
+    }
 }

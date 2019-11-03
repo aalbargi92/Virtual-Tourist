@@ -7,5 +7,5 @@ target 'Virtual Tourist 2.0' do
 
   # Pods for Virtual Tourist 2.0
   pod 'Kingfisher', '~> 5.0'
-
+  pod 'SwiftEntryKit'
 end

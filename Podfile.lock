@@ -2,17 +2,25 @@ PODS:
   - Kingfisher (5.8.2):
     - Kingfisher/Core (= 5.8.2)
   - Kingfisher/Core (5.8.2)
+  - QuickLayout (3.0.0)
+  - SwiftEntryKit (1.2.1):
+    - QuickLayout (= 3.0.0)
 
 DEPENDENCIES:
   - Kingfisher (~> 5.0)
+  - SwiftEntryKit
 
 SPEC REPOS:
   trunk:
     - Kingfisher
+    - QuickLayout
+    - SwiftEntryKit
 
 SPEC CHECKSUMS:
   Kingfisher: 3adc15096595f5aed800bb0d5cb757fc58b2d2dd
+  QuickLayout: 07b45a72b10083fee3f095990cfed1c1e7b27f0a
+  SwiftEntryKit: 1661b766dd22b07679e6ebb326ccfbd81ceb0a20
 
-PODFILE CHECKSUM: c9075e94915b30ab93f1322aac0aa6980208b996
+PODFILE CHECKSUM: 1786bf7e2af240f89f20396bf6b361cb9117cbc2
 
 COCOAPODS: 1.8.3
