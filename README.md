@@ -1,11 +1,23 @@
 # Virtual-Tourist
-Virtual Tourist is an app that allow users to a pin in any location in the map and will save the pin locally. Once you click on
-any pin, you will be taken to another screen to see the images ([Flicker](https://www.flickr.com/)) for that locatiom.
+Virtual Tourist is an app that allow users to a pin in any location in the map and will save the pin locally
 
-You can either view the images, delete them or request new ones.
+## Features:
+* Main Screen:
+  * Long press to add pins
+  * Search for a place and once found you can click on it to save it.
+  * Click **Delete**, top bar will turn red, click on pins to delete them, once done, click done :)
+* Photo Album Screen:
+  * Click **New Collection** to load new set of images.
+  * Click on image to view.
+  * Click **Delete**, top bar will turn red, click on images to delete them, once done, click done :)
+  
 
-The app allows you to delete pins and images, to do so, click **"Delete"** button on top right corner, Top bar will turns red to
-indicated deletion is activated. Once you are done deleting, click **"Done"**
+## Libraries:
+* [Kingfisher](https://github.com/onevcat/Kingfisher): used to load images
+* [SwiftyEntryKit](https://github.com/huri000/SwiftEntryKit) used to display notifications when adding/removing pins
 
-The app was build with **Xcode Version 11.2 (11B52)**
-Virtual Tourist uses [Kingfisher](https://github.com/onevcat/Kingfisher) for loading images and **Core Data** for storing pins and images
+## APIs:
+* [Flicker](https://www.flickr.com/)
+
+## Build:
+* Project is build with **Xcode Version 11.2 (11B52)**
