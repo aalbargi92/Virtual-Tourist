@@ -123,10 +123,18 @@ class TravelMapViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func mapLongPressed(_ sender: UILongPressGestureRecognizer) {
-        guard sender.state == .ended, !isDelete else { return }
+        guard sender.state == .began, !isDelete else { return }
         
         let point = sender.location(in: mapView)
         let coordinates = mapView.convert(point, toCoordinateFrom: mapView)
+        
+        if let pins = fetchedResultsController.fetchedObjects {
+            pins.forEach {
+                if isDuplicate(coordinateA: $0.coordinate, coordinateB: coordinates) {
+                    return
+                }
+            }
+        }
         
         addPin(coordinates: coordinates)
     }
@@ -191,6 +199,10 @@ class TravelMapViewController: UIViewController {
             alert.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    func isDuplicate(coordinateA: CLLocationCoordinate2D, coordinateB: CLLocationCoordinate2D) -> Bool {
+        return coordinateA.latitude == coordinateB.latitude && coordinateA.longitude == coordinateB.longitude
     }
 
 }

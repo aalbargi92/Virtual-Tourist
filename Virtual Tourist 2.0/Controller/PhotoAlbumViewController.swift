@@ -115,7 +115,7 @@ class PhotoAlbumViewController: UIViewController {
     
     func getPhotos() {
         setLoading(true)
-        let page = Int(arc4random())
+        let page = Int(arc4random_uniform(5))
         FlickerService.fetchImages(page: page, latitude: pin.latitude, longitude: pin.longitude, completion: handlePhotosResponse(photos:error:))
     }
     
